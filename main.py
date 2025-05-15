@@ -7,6 +7,7 @@ from entity.book_repository_in_memory import BookRepositoryInMemory
 from ui.book_controller import BookController
 
 def main():
+    # Setup repository dan controller
     repository = BookRepositoryInMemory()
     controller = BookController(
         AddBook(repository),
@@ -16,30 +17,34 @@ def main():
         ReadBook(repository)
     )
 
-    while True:
-        print("\n--- MENU ---")
-        print("1. Tambah Buku")
-        print("2. Lihat Semua Buku")
-        print("3. Hapus Buku")
-        print("4. Edit Buku")
-        print("5. Lihat Detail Buku")
-        print("0. Keluar")
+    # Tambah buku
+    book1 = controller.add_book_controller("Sapiens", "Yuval Noah Harari", 2011)
+    book2 = controller.add_book_controller("1984", "George Orwell", 1949)
+    print(f"Buku ditambahkan: {book1.title} dan {book2.title}")
 
-        pilihan = input("Pilih menu: ")
-        if pilihan == '1':
-            controller.add_book_controller()
-        elif pilihan == '2':
-            controller.browse_books_controller()
-        elif pilihan == '3':
-            controller.delete_book_controller()
-        elif pilihan == '4':
-            controller.edit_book_controller()
-        elif pilihan == '5':
-            controller.read_book_controller()
-        elif pilihan == '0':
-            break
-        else:
-            print("Pilihan tidak valid!")
+    # Lihat semua buku
+    books = controller.browse_books_controller()
+    print("\nDaftar Buku:")
+    for book in books:
+        print(f"ID: {book.id}, Judul: {book.title}, Penulis: {book.author}, Tahun: {book.year}")
+
+    # Edit buku
+    updated_book = controller.edit_book_controller(book1.id, "Sapiens (Revised)", "Yuval Noah Harari", 2020)
+    print(f"\nBuku diperbarui: ID {updated_book.id}, Judul: {updated_book.title}, Tahun: {updated_book.year}")
+
+    # Lihat detail buku
+    book_detail = controller.read_book_controller(book1.id)
+    print(f"\nDetail Buku: ID {book_detail.id}, Judul: {book_detail.title}, Penulis: {book_detail.author}, Tahun: {book_detail.year}")
+
+    # Hapus buku
+    deleted_book = controller.delete_book_controller(book2.id)
+    print(f"\nBuku dihapus: ID {deleted_book.id}, Judul: {deleted_book.title}")
+
+    # Lihat semua buku setelah penghapusan
+    books = controller.browse_books_controller()
+    print("\nDaftar Buku Setelah Penghapusan:")
+    for book in books:
+        print(f"ID: {book.id}, Judul: {book.title}, Penulis: {book.author}, Tahun: {book.year}")
 
 if __name__ == "__main__":
     main()
